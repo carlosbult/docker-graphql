@@ -41,7 +41,8 @@ jobs:
         docker build -t carlosbult/docker-graphql:latest .
 
     - name: Push Docker Image
-      NEW_VERSION: ${{steps.version.outputs.version}}
+      env:
+        NEW_VERSION: ${{steps.version.outputs.version}}
       run: |
         docker push carlosbult/docker-graphql:$NEW_VERSION
         docker push carlosbult/docker-graphql:latest
