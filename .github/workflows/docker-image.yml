@@ -30,23 +30,21 @@ jobs:
       env:
         DOCKER_USER: ${{ secrets. DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets. DOCKER_PASSWORD }}
-        NEW_VERSION: ${{steps.version.outputs.version}}
       run: |
         docker login -u $DOCKER_USER -p   $DOCKER_PASSWORD
-        echo "New Version: $NEW_VERSION"
       
     - name: Build Docker Image
+      env:
+        NEW_VERSION: ${{steps.version.outputs.version}}
       run: |
-        docker build -t carlosbult/docker-graphql:0.0.2 .
+        docker build -t carlosbult/docker-graphql:$NEW_VERSION .
         docker build -t carlosbult/docker-graphql:latest .
 
     - name: Push Docker Image
+      NEW_VERSION: ${{steps.version.outputs.version}}
       run: |
-        docker push carlosbult/docker-graphql:0.0.2
-        docker push carlosbult/docker-graphql:latest 
-      
-    - name: Git Semantic Version
-      uses: PaulHatch/semantic-version@v4.0.3
+        docker push carlosbult/docker-graphql:$NEW_VERSION
+        docker push carlosbult/docker-graphql:latest
 
 #   - name: Build the Docker image
 #      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
